@@ -14,7 +14,7 @@ if ($Script:BackupStatus.IsRunning -contains $True) {
     $Script:VPNStatus = Get-VPNTunnelStatus -VPN_Name "SatCom"
 }
 
-if (!$Script:VPNStatus -eq "Enable") {
+if ($Script:VPNStatus.VPNStatus -eq "Disabled") {
     Write-host -ForegroundColor Yellow "VPN is Disabled - Enabling."
     Set-VPNTunnel -Enable -VPN_Name "SatCom"
 }
