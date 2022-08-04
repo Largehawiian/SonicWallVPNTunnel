@@ -1,4 +1,3 @@
-# Replicate Backups to SatCom
 Import-Module Veeam.Backup.PowerShell
 Import-Module SonicwallVPNTunnel
 

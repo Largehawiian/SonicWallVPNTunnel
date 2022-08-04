@@ -8,17 +8,14 @@ function Convert-Base32ToHex($base32) {
         $binary = [Convert]::ToString($val, 2)
         $staticLen = 5
         $padder = '0'
-            # Write-Host $binary
         $bits += Add-LeftPad $binary.ToString()  $staticLen  $padder
     }
 
 
     for ($i = 0; $i+4 -le $bits.Length; $i+=4) {
         $chunk = $bits.Substring($i, 4)
-        # Write-Host $chunk
         $intChunk = [Convert]::ToInt32($chunk, 2)
         $hexChunk = Convert-IntToHex($intChunk)
-        # Write-Host $hexChunk
         $hex = $hex + $hexChunk
     }
     return $hex;

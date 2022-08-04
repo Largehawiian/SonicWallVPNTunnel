@@ -1,7 +1,6 @@
 function Get-VPNTunnelStatus {
     param (
-        [Parameter(Mandatory = $true)]
-        [string]$VPN_Name
+        [Parameter(Mandatory = $true)][string]$VPN_Name
     )
     begin {
         $Script:ConnectionString = [ConnectionString]::New()

@@ -1,6 +1,6 @@
 # Importing public and private functions
-$PSScript = "C:\Program Files\WindowsPowerShell\Modules\SonicwallVPNTunnel\0.0.1"
-$PublicFunc = @(Get-ChildItem -Path $PSScript\*.ps1 -ErrorAction SilentlyContinue)
+$PSScript = $PSScriptRoot
+$PublicFunc = @(Get-ChildItem  -Recurse -Path $PSScript\*.ps1 -ErrorAction SilentlyContinue)
 $Global:Logname = "SonicaWall"
 $Global:EventSource = "VPNTunnel"
 # Dotsourcing files
@@ -15,15 +15,15 @@ ForEach ($import in $PublicFunc) {
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 if ([System.Net.ServicePointManager]::CertificatePolicy -match "System.Net.DefaultCertPolicy") {
     add-type @"
-         using System.Net;
-         using System.Security.Cryptography.X509Certificates;
-         public class TrustAllCertsPolicy : ICertificatePolicy {
+        using System.Net;
+        using System.Security.Cryptography.X509Certificates;
+        public class TrustAllCertsPolicy : ICertificatePolicy {
                 public bool CheckValidationResult(
-                     ServicePoint srvPoint, X509Certificate certificate,
-                     WebRequest request, int certificateProblem) {
-                         return true;
+                    ServicePoint srvPoint, X509Certificate certificate,
+                    WebRequest request, int certificateProblem) {
+                        return true;
                     }
-             }
+            }
 "@
     [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
 }

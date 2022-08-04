@@ -2,17 +2,9 @@
 function Set-VPNTunnel {
     [CmdletBinding(DefaultParameterSetName = 'Enable')]
     param (
-        [Parameter (Mandatory = $True,
-        ParameterSetName = 'Enable')]
-        [switch]$Enable,
-        
-
-        [Parameter (Mandatory = $True,
-        ParameterSetName = 'Disable')]
-        [switch]$Disable,
-        
-        [Parameter (Mandatory = $True)]
-        [string]$VPN_Name
+        [Parameter (Mandatory = $True,ParameterSetName = 'Enable')][switch]$Enable,
+        [Parameter (Mandatory = $True,ParameterSetName = 'Disable')][switch]$Disable,
+        [Parameter (Mandatory = $True)][string]$VPN_Name
         
     )
     begin {
@@ -34,7 +26,6 @@ function Set-VPNTunnel {
     }
     process {
         if ($Enable) {
-           
             $Script:Body = @{
                 vpn = @{
                     policy = @(@{
@@ -107,7 +98,6 @@ function New-DrmmEventLog {
     )
     process {
         if ([System.Diagnostics.EventLog]::Exists($LogName) -and [System.Diagnostics.EventLog]::SourceExists($EventSource)) {
-           # Write-Host "EventLog:$LogName & Source:$EventSource Exist Already" -ForegroundColor Green
         }
         else {
             try {
