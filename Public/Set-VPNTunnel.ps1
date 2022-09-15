@@ -15,14 +15,13 @@ function Set-VPNTunnel {
             tfa      = $Script:ConnectionString.TFA
             override = "true"
         } | ConvertTo-Json
-        $Script:Headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-        $Script:Headers.Add("Content-Type", "application/json")
-        $Script:Response = Invoke-RestMethod "https://$($Script:ConnectionString.IP):2020/api/sonicos/tfa" -Method 'POST' -Headers $Script:Headers -Body $Script:TFA -SkipCertificateCheck 
+        $Script:Response = Invoke-RestMethod "https://$($Script:ConnectionString.IP):2020/api/sonicos/tfa" -Method 'POST' -Headers $Script:Headers -Body $Script:TFA -SkipCertificateCheck -ContentType "application/json"
         $Script:Token = $Script:Response.replace("INFO: Success. BearToken:", "Bearer")
         $Script:Token = $Script:Token -replace "`n", "" -replace "`r", ""
         $Script:Headers = $null
-        $Script:Headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-        $Script:Headers.Add("Authorization", $Script:Token)
+        $Script:Headers = @{
+            Authorization = $Script:Token
+        }
     }
     process {
         if ($Enable) {

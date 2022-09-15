@@ -10,14 +10,13 @@ function Get-VPNTunnelStatus {
             tfa      = $Script:ConnectionString.TFA
             override = "true"
         } | ConvertTo-Json
-        $Script:Headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-        $Script:Headers.Add("Content-Type", "application/json")
-        $Script:Response = Invoke-RestMethod "https://$($Script:ConnectionString.IP):2020/api/sonicos/tfa" -Method 'POST' -Headers $Script:Headers -Body $Script:TFA -SkipCertificateCheck 
+        $Script:Response = Invoke-RestMethod "https://$($Script:ConnectionString.IP):2020/api/sonicos/tfa" -Method 'POST' -Headers $Script:Headers -Body $Script:TFA -SkipCertificateCheck -ContentType "application/json"
         $Script:Token = $Script:Response.replace("INFO: Success. BearToken:", "Bearer")
         $Script:Token = $Script:Token -replace "`n", "" -replace "`r", ""
         $Script:Headers = $null
-        $Script:Headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-        $Script:Headers.Add("Authorization", $Script:Token)
+        $Script:Headers =@{
+            "Authorization" = $Script:Token
+        }
     }
     process {
         $Script:VPNStatus = Invoke-RestMethod "https://$($Script:ConnectionString.IP):2020/api/sonicos/vpn/policies/ipv4/site-to-site/name/$($VPN_Name)" -Method 'GET' -Headers $Script:Headers -SkipCertificateCheck -ContentType 'application/json'
@@ -31,9 +30,7 @@ function Get-VPNTunnelStatus {
             VPNStatus = switch ($Script:VPNStatus.vpn.policy.ipv4.site_to_site.enable) {
                 true { "Enabled" }
                 false { "Disabled" }
-                
             }
-        
         }
         return  $Script:Return
     }
